@@ -304,3 +304,15 @@ def compare_scenarios(sum_df,col_index):
     
     return sum_df
 
+#removing spaces from name of columns
+def remove_spaces_in_columns(df):
+    for i in df.columns:
+        i = str(i)
+        if ' ' in i:
+            df.rename(columns = {i:i.replace(' ','_')}, inplace = True)
+        if "'" in i:
+            df.rename(columns = {i:i.replace("'",'')}, inplace = True)
+        if '"' in i:
+            df.rename(columns = {i:i.replace('"','')}, inplace = True)
+        
+    return df
