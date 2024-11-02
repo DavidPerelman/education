@@ -316,3 +316,18 @@ def remove_spaces_in_columns(df):
             df.rename(columns = {i:i.replace('"','')}, inplace = True)
         
     return df
+
+# פונקציה לחישוב מספר התלמידים לכל כיתה בטווח
+def first_15_division(class_map, row):
+    start_idx = class_map.index(row['מכיתה'])
+    end_idx = class_map.index(row['עד_כיתה'])
+    class_range = class_map[start_idx:end_idx + 1]
+
+    students_remaining = row['סה"כ_תלמידים']
+    for single_class in class_range:
+        students_in_class = min(15, students_remaining)
+        row[f'כיתה_{single_class}'] = students_in_class
+        students_remaining -= students_in_class
+
+    row['סה"כ_תלמידים'] = students_remaining
+    return row
