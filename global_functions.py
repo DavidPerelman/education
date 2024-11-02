@@ -331,3 +331,35 @@ def first_15_division(class_map, row):
 
     row['סה"כ_תלמידים'] = students_remaining
     return row
+
+# פונקציה לחלוקת התלמידים הנותרים שווה בשווה
+def equal_distribution_students(class_map, row):
+    # איתור הטווח של הכיתות
+    start_idx = class_map.index(row['מכיתה'])
+    end_idx = class_map.index(row['עד_כיתה'])
+    class_range = class_map[start_idx:end_idx + 1]
+    
+    # חישוב מספר התלמידים הנותרים
+    students_remaining = row['סה"כ_תלמידים']
+    num_of_classes = len(class_range)
+    
+    if num_of_classes > 0:
+        # חלוקת התלמידים הנותרים שווה בשווה לכיתות בטווח
+        students_per_class = students_remaining / num_of_classes
+        for single_class in class_range:
+            # אם יש כבר ערך בעמודת הכיתה, נוסיף את הערך החדש
+            if pd.notna(row[f'כיתה_{single_class}']):
+                row[f'כיתה_{single_class}'] += students_per_class
+            else:
+                row[f'כיתה_{single_class}'] = students_per_class
+
+    # עדכון סה"כ תלמידים לאחר חלוקה
+    row['סה"כ_תלמידים'] = 0
+    return row
+
+def split_to_layers(df, ages):
+    df['ele_stu'] = df[ages['ele']].sum(axis=1)
+    df['mid_stu'] = df[ages['mid']].sum(axis=1)
+    df['high_stu'] = df[ages['high']].sum(axis=1)
+
+    return df
